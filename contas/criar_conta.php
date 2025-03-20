@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Criar Conta</title>
 </head>
 <body>
-    <h1>Criar Conta</h1>
+    <h1 c>Criar Conta</h1>
     <form action="criar_conta.php" method="POST">
         <label for="id_usuario">ID do Usuário:</label>
         <input type="number" name="id_usuario" id="id_usuario" required>
