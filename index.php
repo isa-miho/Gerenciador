@@ -12,7 +12,7 @@ session_start();
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
+            margin: 10px;
             padding: 20px;
             background-color: #f4f4f4;
         }

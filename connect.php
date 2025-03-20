@@ -11,7 +11,7 @@ try {
     // Configurar o PDO para lançar exceções em caso de erro
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    echo "Conexão bem-sucedida!"; // Isso é opcional, apenas para depuração
+    // echo "Conexão bem-sucedida!"; // Isso é opcional, apenas para depuração
 } catch (PDOException $e) {
     die("Erro ao conectar: " . $e->getMessage());
 }
