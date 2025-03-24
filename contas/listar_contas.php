@@ -3,7 +3,7 @@
 require_once '../connect.php';
 
 // Buscar todas as contas
-$sql = "SELECT * FROM contas";
+$sql = "SELECT * FROM contas ORDER BY nome_conta";
 $stmt = $pdo->query($sql);
 $contas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -14,67 +14,92 @@ $contas = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listar Contas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
         }
-        table, th, td {
-            border: 1px solid black;
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-top: 20px;
         }
-        th, td {
-            padding: 8px;
-            text-align: left;
+        .badge-bancaria {
+            background-color: #0d6efd;
         }
-        .navigation {
-            margin-bottom: 20px;
+        .badge-digital {
+            background-color: #6f42c1;
         }
-        .navigation a {
-            text-decoration: none;
-            padding: 5px 10px;
-            background-color: #4CAF50;
-            color: white;
-            border-radius: 5px;
-            margin-right: 10px;
+        .badge-outro {
+            background-color: #fd7e14;
         }
-        .navigation a:hover {
-            background-color: #45a049;
+        .action-buttons a {
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Listar Contas</h1>
-    <div class="navigation">
-        <a href="../index.php">Voltar ao Dashboard</a>
-        <a href="criar_conta.php">Criar Nova Conta</a>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Lista de Contas</h1>
+            <div>
+                <a href="../index.php" class="btn btn-outline-secondary me-2">
+                    <i class="bi bi-arrow-left"></i> Voltar ao Dashboard
+                </a>
+                <a href="criar_conta.php" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Nova Conta
+                </a>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuário</th>
+                            <th>Nome da Conta</th>
+                            <th>Saldo</th>
+                            <th>Tipo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($contas as $conta): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($conta['id_conta']) ?></td>
+                                <td><?= htmlspecialchars($conta['id_usuario']) ?></td>
+                                <td><?= htmlspecialchars($conta['nome_conta']) ?></td>
+                                <td>R$ <?= number_format($conta['saldo'], 2, ',', '.') ?></td>
+                                <td>
+                                    <?php 
+                                    $badge_class = 'badge-outro';
+                                    if ($conta['tipo'] === 'bancária') $badge_class = 'badge-bancaria';
+                                    if ($conta['tipo'] === 'carteira digital') $badge_class = 'badge-digital';
+                                    ?>
+                                    <span class="badge <?= $badge_class ?>"><?= ucfirst($conta['tipo']) ?></span>
+                                </td>
+                                <td class="action-buttons">
+                                    <a href="atualizar_conta.php?id=<?= $conta['id_conta'] ?>" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </a>
+                                    <a href="deletar_conta.php?id=<?= $conta['id_conta'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta conta?')">
+                                        <i class="bi bi-trash"></i> Excluir
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>ID Usuário</th>
-                <th>Nome da Conta</th>
-                <th>Saldo</th>
-                <th>Tipo</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($contas as $conta): ?>
-                <tr>
-                    <td><?= htmlspecialchars($conta['id_conta']) ?></td>
-                    <td><?= htmlspecialchars($conta['id_usuario']) ?></td>
-                    <td><?= htmlspecialchars($conta['nome_conta']) ?></td>
-                    <td><?= htmlspecialchars($conta['saldo']) ?></td>
-                    <td><?= htmlspecialchars($conta['tipo']) ?></td>
-                    <td>
-                        <a href="atualizar_conta.php?id=<?= $conta['id_conta'] ?>">Editar</a>
-                        <a href="deletar_conta.php?id=<?= $conta['id_conta'] ?>" onclick="return confirm('Tem certeza?')">Deletar</a>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+   
 </body>
 </html>
