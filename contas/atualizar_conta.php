@@ -41,12 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bindParam(':tipo', $tipo);
     $stmt->bindParam(':id_conta', $id_conta, PDO::PARAM_INT);
 
-        try {
-            $stmt->execute();
-            $success_message = "Conta atualizada com sucesso!";
-        } catch (PDOException $e) {
-            $error_message = "Erro ao atualizar conta: " . $e->getMessage();
-        }
+    try {
+        $stmt->execute();
+        echo "Conta atualizada com sucesso!";
+    } catch (PDOException $e) {
+        echo "Erro ao atualizar conta: " . $e->getMessage();
     }
 }
 ?>
@@ -57,79 +56,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atualizar Conta</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
-        .form-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-        }
-        .form-title {
-            color: #0d6efd;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-    <div class="container">
-        <div class="form-container">
-            <h1 class="form-title">Atualizar Conta</h1>
-            
-            <?php if (isset($success_message)): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <?= $success_message ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            <?php endif; ?>
-            
-            <?php if (isset($error_message)): ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?= $error_message ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            <?php endif; ?>
-            
-            <form action="atualizar_conta.php?id=<?= $id_conta ?>" method="POST">
-                <div class="mb-3">
-                    <label for="nome_conta" class="form-label">Nome da Conta</label>
-                    <input type="text" class="form-control" id="nome_conta" name="nome_conta" 
-                           value="<?= htmlspecialchars($conta['nome_conta']) ?>" required>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="saldo" class="form-label">Saldo</label>
-                    <div class="input-group">
-                        <span class="input-group-text">R$</span>
-                        <input type="number" step="0.01" class="form-control" id="saldo" name="saldo" 
-                               value="<?= htmlspecialchars($conta['saldo']) ?>" required>
-                    </div>
-                </div>
-                
-                <div class="mb-4">
-                    <label for="tipo" class="form-label">Tipo de Conta</label>
-                    <select class="form-select" id="tipo" name="tipo" required>
-                        <option value="bancária" <?= $conta['tipo'] === 'bancária' ? 'selected' : '' ?>>Bancária</option>
-                        <option value="carteira digital" <?= $conta['tipo'] === 'carteira digital' ? 'selected' : '' ?>>Carteira Digital</option>
-                        <option value="outro" <?= $conta['tipo'] === 'outro' ? 'selected' : '' ?>>Outro</option>
-                    </select>
-                </div>
-                
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary btn-lg">Atualizar Conta</button>
-                    <a href="javascript:history.back()" class="btn btn-outline-secondary">Voltar</a>
-                </div>
-            </form>
-        </div>
-    </div>
+    <h1>Atualizar Conta</h1>
+    <form action="atualizar_conta.php?id=<?= $id_conta ?>" method="POST">
+        <label for="nome_conta">Nome da Conta:</label>
+        <input type="text" name="nome_conta" id="nome_conta" value="<?= htmlspecialchars($conta['nome_conta']) ?>" required>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <label for="saldo">Saldo:</label>
+        <input type="number" step="0.01" name="saldo" id="saldo" value="<?= htmlspecialchars($conta['saldo']) ?>" required>
+
+        <label for="tipo">Tipo:</label>
+        <select name="tipo" id="tipo" required>
+            <option value="bancária" <?= $conta['tipo'] === 'bancária' ? 'selected' : '' ?>>Bancária</option>
+            <option value="carteira digital" <?= $conta['tipo'] === 'carteira digital' ? 'selected' : '' ?>>Carteira Digital</option>
+            <option value="outro" <?= $conta['tipo'] === 'outro' ? 'selected' : '' ?>>Outro</option>
+        </select>
+
+        <button type="submit">Atualizar</button>
+    </form>
 </body>
 </html>
