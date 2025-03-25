@@ -56,7 +56,6 @@ $contas = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </a>
             </div>
         </div>
-
         <div class="table-container">
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
@@ -100,6 +99,5 @@ $contas = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </div>
-   
 </body>
 </html>
