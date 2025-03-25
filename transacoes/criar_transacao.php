@@ -37,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Executar a query
     try {
         $stmt->execute();
-        echo "Transação criada com sucesso!";
+        $success_message = "Conta criada com sucesso!";
     } catch (PDOException $e) {
-        echo "Erro ao criar transação: " . $e->getMessage();
+        $error_message = "Erro ao criar conta: " . $e->getMessage();
     }
 }
 ?>
@@ -50,42 +50,109 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Transação</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .form-title {
+            color: #0d6efd;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .btn-submit {
+            padding: 10px 20px;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
-    <h1>Criar Transação</h1>
-    <form action="criar_transacao.php" method="POST">
-        <label for="id_usuario">ID do Usuário:</label>
-        <input type="number" name="id_usuario" id="id_usuario" required>
+    <div class="container">
+        <div class="form-container">
+            <h1 class="form-title">Criar Transação</h1>
 
-        <label for="descricao">Descrição:</label>
-        <input type="text" name="descricao" id="descricao" required>
+            <form action="criar_transacao.php" method="POST">
 
-        <label for="valor">Valor:</label>
-        <input type="number" step="0.01" name="valor" id="valor" required>
+                <div class="mb-3">
+                    <label for="id_usuario">ID do Usuário:</label>
+                    <input type="number" name="id_usuario" id="id_usuario" required>
+                </div> 
+                <div class="mb-3">
+                    <label for="descricao">Descrição:</label>
+                    <input type="text" name="descricao" id="descricao" required>
+                </div>
 
-        <label for="data_transacao">Data da Transação:</label>
-        <input type="date" name="data_transacao" id="data_transacao" required>
+                <div class="mb-3">
+                    <label for="valor">Valor:</label>
+                    <input type="number" step="0.01" name="valor" id="valor" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="data_transacao">Data da Transação:</label>
+                    <input type="date" name="data_transacao" id="data_transacao" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="tipo">Tipo:</label>
+                    <select name="tipo" id="tipo" required>
+                        <option value="despesa">Despesa</option>
+                        <option value="receita">Receita</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="categoria">Categoria:</label>
+                    <input type="text" name="categoria" id="categoria" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="status_transacao">Status:</label>
+                    <select name="status_transacao" id="status_transacao" required>
+                        <option value="pendente">Pendente</option>
+                        <option value="concluída">Concluída</option>
+                        <option value="cancelada">Cancelada</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="metodo_pagamento">Método de Pagamento:</label>
+                    <input type="text" name="metodo_pagamento" id="metodo_pagamento" required>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-grid gap-3">
+                        <button type="submit" class="btn btn-primary btn-submit">Nova transação</button>
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </div>
 
-        <label for="tipo">Tipo:</label>
-        <select name="tipo" id="tipo" required>
-            <option value="despesa">Despesa</option>
-            <option value="receita">Receita</option>
-        </select>
+            </form>
 
-        <label for="categoria">Categoria:</label>
-        <input type="text" name="categoria" id="categoria" required>
-
-        <label for="status_transacao">Status:</label>
-        <select name="status_transacao" id="status_transacao" required>
-            <option value="pendente">Pendente</option>
-            <option value="concluída">Concluída</option>
-            <option value="cancelada">Cancelada</option>
-        </select>
-
-        <label for="metodo_pagamento">Método de Pagamento:</label>
-        <input type="text" name="metodo_pagamento" id="metodo_pagamento" required>
-
-        <button type="submit">Criar</button>
-    </form>
+            <?php if(isset($success_message)): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= $success_message ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+            
+            <?php if(isset($error_message)): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= $error_message ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+            
+        </div>
+    </div>
 </body>
 </html>
