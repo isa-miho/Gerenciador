@@ -1,40 +1,27 @@
 <?php
-// Conectar ao banco de dados
-require_once '../connect.php'; // Inclua o código de conexão com o banco de dados
+require_once '../connect.php'; 
 
-// Verificar se os dados do formulário foram enviados via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Capturar os dados do formulário
     $nome = $_POST['nome'];
     $email = $_POST['email'];
     $senha = $_POST['senha'];
 
-    // Validar os dados
     if (empty($nome) || empty($email) || empty($senha)) {
         die('Por favor, preencha todos os campos.');
     }
 
-    // Validar formato do e-mail
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         die('E-mail inválido.');
     }
 
-    // Hash da senha
     $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
-
-    // Preparar a query para inserir os dados no banco de dados
     $sql = "INSERT INTO usuario (nome, email, senha) VALUES (:nome, :email, :senha)";
 
     try {
-        // Preparar a execução da query
         $stmt = $pdo->prepare($sql);
-
-        // Associar os parâmetros com os valores
         $stmt->bindParam(':nome', $nome);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':senha', $senha_hash);
-
-        // Executar a query
         $stmt->execute();
 
         echo "Usuário criado com sucesso!";
@@ -49,6 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar usuário</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         .navigation {
             margin-bottom: 20px;
