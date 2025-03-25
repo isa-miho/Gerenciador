@@ -39,41 +39,90 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        .navigation {
-            margin-bottom: 20px;
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
         }
-        .navigation a {
-            text-decoration: none;
-            padding: 5px 10px;
-            background-color: #4CAF50;
-            color: white;
-            border-radius: 5px;
-            margin-right: 10px;
+        .form-container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
-        .navigation a:hover {
-            background-color: #45a049;
+        .form-title {
+            color: #0d6efd;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .btn-submit {
+            padding: 10px 20px;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
-    <h1>Criar Usuário</h1>
+    <div class="container">
+        <div class="form-container">
+            <h1 class="form-title">Usuário</h1>
 
-    <!-- Navigation Links -->
-    <div class="navigation">
-        <a href="../index.php">Voltar ao Dashboard</a>
-        <a href="listar_usuario.php">Listar Usuários</a>
+            
+            <?php if (isset($success_message)): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= $success_message ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($error_message)): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= $error_message ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
+
+
+            <form action="criar_usuario.php" method="POST">
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nome" name="nome" 
+                            value="<?= isset($nome) ? htmlspecialchars($nome) : '' ?>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="text" class="form-control" id="email" name="email" 
+                            value="<?= isset($email) ? htmlspecialchars($email) : '' ?>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input type="text" class="form-control" id="senha" name="senha" 
+                            value="<?= isset($senha) ? htmlspecialchars($senha) : '' ?>" required>
+                </div>
+                  
+                <div class="d-grid gap-3">
+                    <button type="submit" class="btn btn-primary btn-submit">Criar Usuário</button>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+
+            </form>
+
+
+        
+        </div>
+
+        </div>
+
+
+    
+
     </div>
-    <form action="criar_usuario.php" method="POST">
-        <label for="nome">Nome:</label>
-        <input type="text" name="nome" id="nome" required>
 
-        <label for="email">E-mail:</label>
-        <input type="email" name="email" id="email" required>
-
-        <label for="senha">Senha:</label>
-        <input type="password" name="senha" id="senha" required>
-
-        <button type="submit">Cadastrar</button>
-    </form>
+  
+    
 </body>
 </html>
