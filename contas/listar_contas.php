@@ -49,7 +49,7 @@ $contas = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <h1 class="mb-0">Lista de Contas</h1>
             <div>
                 <a href="../index.php" class="btn btn-outline-secondary me-2">
-                    <i class="bi bi-arrow-left"></i> Voltar ao Dashboard
+                    <i class="bi bi-arrow-left"></i> Voltar
                 </a>
                 <a href="criar_conta.php" class="btn btn-primary">
                     <i class="bi bi-plus-circle"></i> Nova Conta
