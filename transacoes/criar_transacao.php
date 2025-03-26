@@ -85,47 +85,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form action="criar_transacao.php" method="POST">
 
                 <div class="mb-3">
-                    <label for="id_usuario">ID do Usuário:</label>
+                    <label for="id_usuario"  class="form-label" class="form-label">ID do Usuário:</label>
                     <input type="number" name="id_usuario" id="id_usuario" required>
                 </div> 
                 <div class="mb-3">
-                    <label for="descricao">Descrição:</label>
+                    <label for="descricao"  class="form-label" class="form-label">Descrição:</label>
                     <input type="text" name="descricao" id="descricao" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="valor">Valor:</label>
+                    <label for="valor" class="form-label">Valor:</label>
                     <input type="number" step="0.01" name="valor" id="valor" required>
                 </div>
                 
                 <div class="mb-3">
-                    <label for="data_transacao">Data da Transação:</label>
+                    <label for="data_transacao"  class="form-label" class="form-label">Data da Transação:</label>
                     <input type="date" name="data_transacao" id="data_transacao" required>
                 </div>
                 
                 <div class="mb-3">
-                    <label for="tipo">Tipo:</label>
+                    <label for="tipo"  class="form-label" class="form-label">Tipo:</label>
                     <select name="tipo" id="tipo" required>
                         <option value="despesa">Despesa</option>
                         <option value="receita">Receita</option>
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="categoria">Categoria:</label>
+                    <label for="categoria"  class="form-label" class="form-label">Categoria:</label>
                     <input type="text" name="categoria" id="categoria" required>
                 </div>
                 
-                <div class="mb-3">
-                    <label for="status_transacao">Status:</label>
-                    <select name="status_transacao" id="status_transacao" required>
+                <div class="mb-4" class="form-label">
+                    <label for="status_transacao"  class="form-label">Status:</label>
+                    <select class="form-select" name="status_transacao" id="status_transacao" required>
                         <option value="pendente">Pendente</option>
                         <option value="concluída">Concluída</option>
                         <option value="cancelada">Cancelada</option>
                     </select>
                 </div>
                 
-                <div class="mb-3">
-                    <label for="metodo_pagamento">Método de Pagamento:</label>
+                <div class="mb-3" class="form-label">
+                    <label for="metodo_pagamento"  class="form-label">Método de Pagamento:</label>
                     <input type="text" name="metodo_pagamento" id="metodo_pagamento" required>
                 </div>
                 
