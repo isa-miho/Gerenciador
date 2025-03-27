@@ -16,30 +16,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validar os dados
     if (empty($id_usuario) || empty($descricao) || empty($valor) || empty($data_transacao) || empty($tipo) || empty($categoria) || empty($status_transacao) || empty($metodo_pagamento)) {
-        die('Por favor, preencha todos os campos.');
-    }
+        $error_message = 'Por favor, preencha todos os campos.';
+    } else {
+        // Preparar a query para inserir a transação
+        $sql = "INSERT INTO transacoes (id_usuario, descricao, valor, data_transacao, tipo, categoria, status_transacao, metodo_pagamento) 
+                VALUES (:id_usuario, :descricao, :valor, :data_transacao, :tipo, :categoria, :status_transacao, :metodo_pagamento)";
+        $stmt = $pdo->prepare($sql);
 
-    // Preparar a query para inserir a transação
-    $sql = "INSERT INTO transacoes (id_usuario, descricao, valor, data_transacao, tipo, categoria, status_transacao, metodo_pagamento) 
-            VALUES (:id_usuario, :descricao, :valor, :data_transacao, :tipo, :categoria, :status_transacao, :metodo_pagamento)";
-    $stmt = $pdo->prepare($sql);
+        // Associar os parâmetros com os valores
+        $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+        $stmt->bindParam(':descricao', $descricao);
+        $stmt->bindParam(':valor', $valor);
+        $stmt->bindParam(':data_transacao', $data_transacao);
+        $stmt->bindParam(':tipo', $tipo);
+        $stmt->bindParam(':categoria', $categoria);
+        $stmt->bindParam(':status_transacao', $status_transacao);
+        $stmt->bindParam(':metodo_pagamento', $metodo_pagamento);
 
-    // Associar os parâmetros com os valores
-    $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
-    $stmt->bindParam(':descricao', $descricao);
-    $stmt->bindParam(':valor', $valor);
-    $stmt->bindParam(':data_transacao', $data_transacao);
-    $stmt->bindParam(':tipo', $tipo);
-    $stmt->bindParam(':categoria', $categoria);
-    $stmt->bindParam(':status_transacao', $status_transacao);
-    $stmt->bindParam(':metodo_pagamento', $metodo_pagamento);
-
-    // Executar a query
-    try {
-        $stmt->execute();
-        $success_message = "Conta criada com sucesso!";
-    } catch (PDOException $e) {
-        $error_message = "Erro ao criar conta: " . $e->getMessage();
+        // Executar a query
+        try {
+            $stmt->execute();
+            $success_message = "Transação criada com sucesso!";
+            // Limpar os campos do formulário após o sucesso
+            $id_usuario = $descricao = $valor = $data_transacao = $tipo = $categoria = $status_transacao = $metodo_pagamento = '';
+        } catch (PDOException $e) {
+            $error_message = "Erro ao criar transação: " . $e->getMessage();
+        }
     }
 }
 ?>
@@ -81,77 +83,83 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="container">
         <div class="form-container">
             <h1 class="form-title">Criar Transação</h1>
-
-            <form action="criar_transacao.php" method="POST">
-
-                <div class="mb-3">
-                    <label for="id_usuario"  class="form-label" class="form-label">ID do Usuário:</label>
-                    <input type="number" name="id_usuario" id="id_usuario" required>
-                </div> 
-                <div class="mb-3">
-                    <label for="descricao"  class="form-label" class="form-label">Descrição:</label>
-                    <input type="text" name="descricao" id="descricao" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="valor" class="form-label">Valor:</label>
-                    <input type="number" step="0.01" name="valor" id="valor" required>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="data_transacao"  class="form-label" class="form-label">Data da Transação:</label>
-                    <input type="date" name="data_transacao" id="data_transacao" required>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="tipo"  class="form-label" class="form-label">Tipo:</label>
-                    <select name="tipo" id="tipo" required>
-                        <option value="despesa">Despesa</option>
-                        <option value="receita">Receita</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="categoria"  class="form-label" class="form-label">Categoria:</label>
-                    <input type="text" name="categoria" id="categoria" required>
-                </div>
-                
-                <div class="mb-4" class="form-label">
-                    <label for="status_transacao"  class="form-label">Status:</label>
-                    <select class="form-select" name="status_transacao" id="status_transacao" required>
-                        <option value="pendente">Pendente</option>
-                        <option value="concluída">Concluída</option>
-                        <option value="cancelada">Cancelada</option>
-                    </select>
-                </div>
-                
-                <div class="mb-3" class="form-label">
-                    <label for="metodo_pagamento"  class="form-label">Método de Pagamento:</label>
-                    <input type="text" name="metodo_pagamento" id="metodo_pagamento" required>
-                </div>
-                
-                <div class="mb-3">
-                    <div class="d-grid gap-3">
-                        <button type="submit" class="btn btn-primary btn-submit">Nova transação</button>
-                        <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancelar</a>
-                    </div>
-                </div>
-
-            </form>
-
-            <?php if(isset($success_message)): ?>
+            
+            <?php if (isset($success_message)): ?>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <?= $success_message ?>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <?php endif; ?>
             
-            <?php if(isset($error_message)): ?>
+            <?php if (isset($error_message)): ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <?= $error_message ?>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <?php endif; ?>
-            
+
+            <form action="criar_transacao.php" method="POST">
+                <div class="mb-3">
+                    <label for="id_usuario" class="form-label">ID do Usuário</label>
+                    <input type="number" class="form-control" id="id_usuario" name="id_usuario" 
+                           value="<?= isset($id_usuario) ? htmlspecialchars($id_usuario) : '' ?>" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="descricao" class="form-label">Descrição</label>
+                    <input type="text" class="form-control" id="descricao" name="descricao" 
+                           value="<?= isset($descricao) ? htmlspecialchars($descricao) : '' ?>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="valor" class="form-label">Valor</label>
+                    <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" step="0.01" class="form-control" id="valor" name="valor" 
+                               value="<?= isset($valor) ? htmlspecialchars($valor) : '' ?>" required>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="data_transacao" class="form-label">Data da Transação</label>
+                    <input type="date" class="form-control" id="data_transacao" name="data_transacao" 
+                           value="<?= isset($data_transacao) ? htmlspecialchars($data_transacao) : '' ?>" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="tipo" class="form-label">Tipo</label>
+                    <select class="form-select" id="tipo" name="tipo" required>
+                        <option value="despesa" <?= (isset($tipo) && $tipo === 'despesa') ? 'selected' : '' ?>>Despesa</option>
+                        <option value="receita" <?= (isset($tipo) && $tipo === 'receita') ? 'selected' : '' ?>>Receita</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="categoria" class="form-label">Categoria</label>
+                    <input type="text" class="form-control" id="categoria" name="categoria" 
+                           value="<?= isset($categoria) ? htmlspecialchars($categoria) : '' ?>" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="status_transacao" class="form-label">Status</label>
+                    <select class="form-select" id="status_transacao" name="status_transacao" required>
+                        <option value="pendente" <?= (isset($status_transacao) && $status_transacao === 'pendente') ? 'selected' : '' ?>>Pendente</option>
+                        <option value="concluída" <?= (isset($status_transacao) && $status_transacao === 'concluída') ? 'selected' : '' ?>>Concluída</option>
+                        <option value="cancelada" <?= (isset($status_transacao) && $status_transacao === 'cancelada') ? 'selected' : '' ?>>Cancelada</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="metodo_pagamento" class="form-label">Método de Pagamento</label>
+                    <input type="text" class="form-control" id="metodo_pagamento" name="metodo_pagamento" 
+                           value="<?= isset($metodo_pagamento) ? htmlspecialchars($metodo_pagamento) : '' ?>" required>
+                </div>
+                
+                <div class="d-grid gap-3">
+                    <button type="submit" class="btn btn-primary btn-submit">Nova transação</button>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
         </div>
     </div>
 </body>
