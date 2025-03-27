@@ -42,7 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         try {
             $stmt->execute();
-            $success_message = "Conta atualizada com sucesso!";
+            // Redirecionar para outra página após a atualização
+            header('Location: listar_conta.php');
+            exit;
         } catch (PDOException $e) {
             $error_message = "Erro ao atualizar conta: " . $e->getMessage();
         }
@@ -56,9 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atualizar Conta</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
         :root {

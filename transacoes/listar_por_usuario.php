@@ -1,4 +1,5 @@
 <?php
+// Sem uso no visual
 // Conectar ao banco de dados
 require_once '../connect.php';
 
